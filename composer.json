@@ -1,0 +1,29 @@
+{
+  "name": "parfeon/mcp-bitrix24",
+  "description": "MCP server for Bitrix24 — exposes CRM and Tasks to AI clients via Model Context Protocol",
+  "type": "library",
+  "license": "Elastic-2.0",
+  "authors": [
+    {
+      "name": "Vadim Palgov",
+      "email": "v.palgov@gmail.com",
+      "homepage": "https://parfeon.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.3",
+    "php-mcp/server": "^2.0",
+    "react/promise": "^3.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Parfeon\\Bitrix\\Mcp\\": "src/"
+    }
+  },
+  "extra": {
+    "mcp-bitrix24": {
+      "admin_user_id": 1,
+      "modules": ["crm", "tasks"]
+    }
+  }
+}
