@@ -54,7 +54,7 @@ class Config
     public static function getModules(): array
     {
         self::load();
-        return self::$extra['modules'] ?? ['crm', 'tasks'];
+        return self::$extra['modules'] ?? ['crm', 'tasks', 'socialnetwork'];
     }
 
     private static function discoverBitrixRoot(): string

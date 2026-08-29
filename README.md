@@ -32,7 +32,7 @@ Add an `extra.mcp-bitrix24` section to your root `composer.json`:
     "mcp-bitrix24": {
       "bitrix_root": "/var/www/bitrix",
       "admin_user_id": 1,
-      "modules": ["crm", "tasks"]
+      "modules": ["crm", "tasks", "socialnetwork"]
     }
   }
 }
@@ -42,7 +42,7 @@ Add an `extra.mcp-bitrix24` section to your root `composer.json`:
 |---|---|---|---|
 | `bitrix_root` | string | auto-detect | Absolute path to the Bitrix document root. If omitted, the package walks up the directory tree looking for `bitrix/modules/main/include/prolog_before.php`. |
 | `admin_user_id` | int | `1` | Bitrix user ID used to authorize internal API calls. |
-| `modules` | array | `["crm", "tasks"]` | Bitrix modules to load on startup. Add `"iblock"` if you use iblock-linked fields. |
+| `modules` | array | `["crm", "tasks", "socialnetwork"]` | Bitrix modules to load on startup. Add `"iblock"` if you use iblock-linked fields. |
 
 If `bitrix_root` is not set and auto-detection fails, the server exits with:
 
@@ -132,6 +132,13 @@ Any MCP client that supports stdio transport will work with the same pattern.
 | `crm_delete_user_field` | Delete a user field (irreversible) |
 | `iblock_get_elements` | List iblock elements (useful for decoding iblock_element field values) |
 | `tasks_get_list` | List tasks with optional filters |
+| `tasks_create` | Create a task |
+| `tasks_update` | Update a task |
+| `tasks_delete` | Delete a task (irreversible) |
+| `groups_get_list` | List workgroups/projects with optional filters |
+| `groups_create` | Create a workgroup or project |
+| `groups_update` | Update a workgroup or project |
+| `groups_delete` | Delete a workgroup or project (irreversible) |
 
 ## Running Environments
 

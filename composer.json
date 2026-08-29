@@ -23,7 +23,7 @@
   "extra": {
     "mcp-bitrix24": {
       "admin_user_id": 1,
-      "modules": ["crm", "tasks"]
+      "modules": ["crm", "tasks", "socialnetwork"]
     }
   }
 }

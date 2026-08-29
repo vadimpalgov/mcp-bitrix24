@@ -32,7 +32,7 @@ composer require parfeon/mcp-bitrix24
     "mcp-bitrix24": {
       "bitrix_root": "/var/www/bitrix",
       "admin_user_id": 1,
-      "modules": ["crm", "tasks"]
+      "modules": ["crm", "tasks", "socialnetwork"]
     }
   }
 }
@@ -42,7 +42,7 @@ composer require parfeon/mcp-bitrix24
 |---|---|---|---|
 | `bitrix_root` | string | авто | Абсолютный путь к корню Bitrix. Если не задан, пакет поднимается вверх по директориям в поиске `bitrix/modules/main/include/prolog_before.php`. |
 | `admin_user_id` | int | `1` | ID пользователя Bitrix для авторизации внутренних API-вызовов. |
-| `modules` | array | `["crm", "tasks"]` | Модули Bitrix для загрузки при старте. Добавьте `"iblock"` если используете поля типа iblock_element. |
+| `modules` | array | `["crm", "tasks", "socialnetwork"]` | Модули Bitrix для загрузки при старте. Добавьте `"iblock"` если используете поля типа iblock_element. |
 
 Если `bitrix_root` не задан и авто-обнаружение не нашло Bitrix, сервер завершится с ошибкой:
 
@@ -132,6 +132,13 @@ composer require parfeon/mcp-bitrix24
 | `crm_delete_user_field` | Удалить пользовательское поле (необратимо) |
 | `iblock_get_elements` | Элементы инфоблока (для расшифровки значений iblock_element-полей) |
 | `tasks_get_list` | Список задач с фильтрами |
+| `tasks_create` | Создать задачу |
+| `tasks_update` | Изменить задачу |
+| `tasks_delete` | Удалить задачу (необратимо) |
+| `groups_get_list` | Список групп/проектов с фильтрами |
+| `groups_create` | Создать группу или проект |
+| `groups_update` | Изменить группу или проект |
+| `groups_delete` | Удалить группу или проект (необратимо) |
 
 ## Окружения запуска
 
