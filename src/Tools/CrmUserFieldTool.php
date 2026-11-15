@@ -13,7 +13,7 @@ class CrmUserFieldTool
 {
     #[McpTool(
         name: 'crm_add_user_field',
-        description: 'Добавить пользовательское поле (UF_*) к CRM-сущности или смарт-процессу. entityTypeId: сделки=2, контакты=3, компании=4, смарт-процессы по их ENTITY_TYPE_ID (например 1036). Типы поля: string, integer, double, boolean, date, datetime, file, enumeration, employee, iblock_element, crm, money. Для userTypeId="enumeration" передайте enumValues — список вариантов выбора (первый становится значением по умолчанию), иначе поле будет создано без единого варианта. Для userTypeId="crm" (и других типов с SETTINGS) передайте settings, например {"DEAL":"Y","DYNAMIC_1038":"Y"} — без этого Bitrix по умолчанию свяжет поле с лидами (LEAD=>Y).'
+        description: 'Добавить пользовательское поле (UF_*) к CRM-сущности или смарт-процессу. entityTypeId: сделки=2, контакты=3, компании=4, смарт-процессы по их ENTITY_TYPE_ID (например 1036). Типы поля: string, integer, double, boolean, date, datetime, file, enumeration, employee, iblock_element, crm, money. Для userTypeId="enumeration" передайте enumValues — список вариантов выбора (первый становится значением по умолчанию), иначе поле будет создано без единого варианта. Для userTypeId="crm" (и других типов с SETTINGS) передайте settings — JSON-объект строкой, например {"DEAL":"Y","DYNAMIC_1038":"Y"} — без этого Bitrix по умолчанию свяжет поле с лидами (LEAD=>Y).'
     )]
     public function addUserField(
         int    $entityTypeId,
@@ -25,7 +25,7 @@ class CrmUserFieldTool
         bool   $multiple = false,
         int    $sort = 100,
         array  $enumValues = [],
-        array  $settings = []
+        string $settings = ''
     ): array {
         $ufEntityId = CCrmOwnerType::ResolveUserFieldEntityID($entityTypeId);
         if (!$ufEntityId) {
@@ -35,6 +35,11 @@ class CrmUserFieldTool
         $fieldName = strtoupper($fieldName);
         if (!str_starts_with($fieldName, 'UF_')) {
             return ['success' => false, 'error' => 'Имя поля должно начинаться с UF_'];
+        }
+
+        $settingsData = $settings !== '' ? json_decode($settings, true) : null;
+        if ($settings !== '' && !is_array($settingsData)) {
+            return ['success' => false, 'error' => 'Параметр settings должен быть валидным JSON-объектом'];
         }
 
         $labels = [
@@ -56,8 +61,8 @@ class CrmUserFieldTool
             'HELP_MESSAGE'      => ['ru' => '', 'en' => ''],
         ];
 
-        if ($settings) {
-            $fields['SETTINGS'] = $settings;
+        if ($settingsData) {
+            $fields['SETTINGS'] = $settingsData;
         }
 
         $entity = new CUserTypeEntity();
