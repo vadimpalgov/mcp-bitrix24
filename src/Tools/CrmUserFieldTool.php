@@ -5,6 +5,7 @@ namespace Parfeon\Bitrix\Mcp\Tools;
 use Bitrix\Main\UserFieldLangTable;
 use Bitrix\Main\UserFieldTable;
 use CCrmOwnerType;
+use CUserFieldEnum;
 use CUserTypeEntity;
 use PhpMcp\Server\Attributes\McpTool;
 
@@ -12,7 +13,7 @@ class CrmUserFieldTool
 {
     #[McpTool(
         name: 'crm_add_user_field',
-        description: 'Добавить пользовательское поле (UF_*) к CRM-сущности или смарт-процессу. entityTypeId: сделки=2, контакты=3, компании=4, смарт-процессы по их ENTITY_TYPE_ID (например 1036). Типы поля: string, integer, double, boolean, date, datetime, file, enumeration, employee, iblock_element, crm, money.'
+        description: 'Добавить пользовательское поле (UF_*) к CRM-сущности или смарт-процессу. entityTypeId: сделки=2, контакты=3, компании=4, смарт-процессы по их ENTITY_TYPE_ID (например 1036). Типы поля: string, integer, double, boolean, date, datetime, file, enumeration, employee, iblock_element, crm, money. Для userTypeId="enumeration" передайте enumValues — список вариантов выбора (первый становится значением по умолчанию), иначе поле будет создано без единого варианта. Для userTypeId="crm" (и других типов с SETTINGS) передайте settings, например {"DEAL":"Y","DYNAMIC_1038":"Y"} — без этого Bitrix по умолчанию свяжет поле с лидами (LEAD=>Y).'
     )]
     public function addUserField(
         int    $entityTypeId,
@@ -22,7 +23,9 @@ class CrmUserFieldTool
         string $labelEn = '',
         bool   $mandatory = false,
         bool   $multiple = false,
-        int    $sort = 100
+        int    $sort = 100,
+        array  $enumValues = [],
+        array  $settings = []
     ): array {
         $ufEntityId = CCrmOwnerType::ResolveUserFieldEntityID($entityTypeId);
         if (!$ufEntityId) {
@@ -39,8 +42,7 @@ class CrmUserFieldTool
             'en' => $labelEn ?: $labelRu,
         ];
 
-        $entity = new CUserTypeEntity();
-        $id = $entity->Add([
+        $fields = [
             'ENTITY_ID'         => $ufEntityId,
             'FIELD_NAME'        => $fieldName,
             'USER_TYPE_ID'      => $userTypeId,
@@ -52,7 +54,14 @@ class CrmUserFieldTool
             'LIST_FILTER_LABEL' => $labels,
             'ERROR_MESSAGE'     => ['ru' => '', 'en' => ''],
             'HELP_MESSAGE'      => ['ru' => '', 'en' => ''],
-        ]);
+        ];
+
+        if ($settings) {
+            $fields['SETTINGS'] = $settings;
+        }
+
+        $entity = new CUserTypeEntity();
+        $id = $entity->Add($fields);
 
         if (!$id) {
             global $APPLICATION;
@@ -61,6 +70,14 @@ class CrmUserFieldTool
                 'success' => false,
                 'error'   => $error ? $error->GetString() : 'Неизвестная ошибка при добавлении поля',
             ];
+        }
+
+        if ($userTypeId === 'enumeration' && $enumValues) {
+            $values = [];
+            foreach ($enumValues as $i => $value) {
+                $values['n' . $i] = ['VALUE' => $value, 'DEF' => $i === 0 ? 'Y' : 'N', 'SORT' => ($i + 1) * 10];
+            }
+            (new CUserFieldEnum())->SetEnumValues($id, $values);
         }
 
         return ['success' => true, 'id' => (int)$id, 'fieldName' => $fieldName];
