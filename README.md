@@ -127,6 +127,12 @@ Any MCP client that supports stdio transport will work with the same pattern.
 | `crm_delete_item` | Delete a CRM entity item (irreversible) |
 | `crm_get_entity_fields` | List all fields (ORM + UF_* + parent relations) for an entity type |
 | `crm_get_smart_processes` | List all smart processes (custom CRM types) |
+| `crm_get_categories` | List funnels/categories for a deal or smart process type |
+| `crm_get_stages` | List stages in a funnel for a deal or smart process type |
+| `crm_create_stage` | Create a stage in a funnel for a deal or smart process type |
+| `crm_rename_stage` | Rename a stage by STATUS_ID |
+| `crm_delete_stage` | Delete a custom stage by STATUS_ID (irreversible) |
+| `crm_move_items_between_stages` | Bulk-move items (up to 100) from one stage to another |
 | `crm_add_user_field` | Add a user field (UF_*) to a CRM entity |
 | `crm_update_user_field` | Update label / mandatory / sort of a user field |
 | `crm_delete_user_field` | Delete a user field (irreversible) |
